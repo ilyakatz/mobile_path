@@ -15,11 +15,11 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "mobile_path"
-  gem.homepage = "http://github.com/patricksrobertson/mobile_path"
+  gem.homepage = "http://github.com/Velir/mobile_path"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "patricksrobertson@gmail.com"
+  gem.summary = "Simple way to give your Rails app mobile views."
+  gem.description = "Mobile Path provides you with a mobile sub-domain and a new view path for mobile content."
+  gem.email = "patrick.robertson@velir.com"
   gem.authors = ["patricksrobertson"]
   # dependencies defined in Gemfile
 end
