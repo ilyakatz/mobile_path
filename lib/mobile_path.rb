@@ -38,13 +38,13 @@ module MobilePath
     # checks if the requesting user agent is a mobile browser. The devices
     # that return true can be configured with the mobile_device_regex.
     def mobile_browser?
-      user_agent && user_agent[MobilePath.config.mobile_device_regex]
+      user_agent && user_agent[MobilePath.config.mobile_device_regex].present?
     end
 
     #
     # Checks if the incoming request is using the mobile subdomain.
     def mobile_request?
-      request.subdomains.first == mobile_subdomain
+      (mobile_subdomain.present? and request.subdomains.first == mobile_subdomain) || mobile_browser?
     end
 
     #
@@ -84,14 +84,17 @@ module MobilePath
     #
     # Remove www. and add the mobile submomain to the request and redirect
     def redirect_to_mobile
-      mobile = mobile_subdomain.present? ? [mobile_subdomain,"."].join : ""
-      redirect_to [request.protocol, mobile , request.domain, request.port_string, request.fullpath].join and return
+      redirect_to [request.protocol,
+                   mobile_subdomain, "." ,
+                   request.domain,
+                   request.port_string,
+                   request.fullpath].join and return if mobile_subdomain.present?
     end
 
     #
     # If a request is mobile and the user doesn't prefer the full-site, redirect to the mobile site.
     def redirect_to_mobile_if_applicable
-      unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser? || !mobile_subdomain.present?
+      unless !mobile_request? || cookies[:prefer_full_site].present?
         redirect_to_mobile and return
       end
     end
@@ -103,7 +106,6 @@ module MobilePath
         cookies.delete(:prefer_full_site)
       elsif params[:full_site]
         cookies.permanent[:prefer_full_site] = 1
-        redirect_to_full_site if mobile_request?
       end
     end
 
