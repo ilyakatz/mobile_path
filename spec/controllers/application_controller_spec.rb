@@ -32,6 +32,7 @@ describe ApplicationController do
       request.env["HTTP_USER_AGENT"] = "Test"
       get :index
       response.location.should be_false
+      response.code.should == "200"
       controller.view_paths.select{|view|view.to_s=~/#{MobilePath.config.mobile_view_path}/}.should_not be_present
     end
 
