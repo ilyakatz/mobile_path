@@ -30,6 +30,17 @@ You can override some of the defaults in your config/initializers/ folder like s
       config.mobile_device_regex = /(iPhone|Android)/
     end
 
+Configure your environment for appropriate top level domain length such as the following examples
+
+    development.rb
+    #   lvh.me = this is an alias for localhost
+    config.action_dispatch.tld_length=1
+
+    others
+
+    #   staging.mysite.com
+    #   config.action_dispatch.tld_length=2
+
 Usage
 -----
 
