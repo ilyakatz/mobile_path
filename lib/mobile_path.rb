@@ -84,7 +84,8 @@ module MobilePath
     #
     # Remove www. and add the mobile submomain to the request and redirect
     def redirect_to_mobile
-      redirect_to [request.protocol, mobile_subdomain, ".", request.domain, request.port_string, request.fullpath].join and return
+      mobile = mobile_subdomain.present? ? [mobile_subdomain,"."].join : ""
+      redirect_to [request.protocol, mobile , request.domain, request.port_string, request.fullpath].join and return
     end
 
     #
