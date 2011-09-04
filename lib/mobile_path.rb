@@ -91,7 +91,7 @@ module MobilePath
     #
     # If a request is mobile and the user doesn't prefer the full-site, redirect to the mobile site.
     def redirect_to_mobile_if_applicable
-      unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser?
+      unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser? || !mobile_subdomain.present?
         redirect_to_mobile and return
       end
     end

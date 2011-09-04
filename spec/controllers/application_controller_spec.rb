@@ -42,7 +42,6 @@ describe ApplicationController do
       MobilePath.config.subdomain=""
       request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (iPhone; U; XXXXX like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/241 Safari/419.3 |"
       get :index, {:mobile_site => true}
-      debugger
       response.location.should eq("http://test.host/stub_resources?mobile_site=true")
     end
 
