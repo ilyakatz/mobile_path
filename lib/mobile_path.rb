@@ -44,7 +44,8 @@ module MobilePath
     #
     # Checks if the incoming request is using the mobile subdomain.
     def mobile_request?
-      (mobile_subdomain.present? and request.subdomains.first == mobile_subdomain) || mobile_browser?
+      return false if cookies[:prefer_full_site].present?
+      (mobile_subdomain.present? && request.subdomains.first == mobile_subdomain) || mobile_browser?
     end
 
     #
@@ -84,6 +85,7 @@ module MobilePath
     #
     # Remove www. and add the mobile submomain to the request and redirect
     def redirect_to_mobile
+
       redirect_to [request.protocol,
                    mobile_subdomain, "." ,
                    request.domain,
@@ -94,14 +96,16 @@ module MobilePath
     #
     # If a request is mobile and the user doesn't prefer the full-site, redirect to the mobile site.
     def redirect_to_mobile_if_applicable
-      unless !mobile_request? || cookies[:prefer_full_site].present?
-        redirect_to_mobile and return
+      if mobile_request? and request.subdomains.first != mobile_subdomain
+       redirect_to_mobile
       end
+
     end
 
     #
     # Switch to either the mobile or the full site based upon parameters.
     def toggle_mobile_preference_cookie
+
       if params[:mobile_site]
         cookies.delete(:prefer_full_site)
       elsif params[:full_site]

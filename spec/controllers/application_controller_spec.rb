@@ -33,18 +33,18 @@ describe ApplicationController do
       get :index
       response.location.should be_false
       response.code.should == "200"
-      controller.view_paths.select{|view|view.to_s=~/#{MobilePath.config.mobile_view_path}/}.should_not be_present
+      controller.view_paths.select { |view| view.to_s=~/#{MobilePath.config.mobile_view_path}/ }.should_not be_present
     end
 
     it "shouldn't redirect on a mobile user agent with a full_site param" do
       request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (iPhone; U; XXXXX like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/241 Safari/419.3 |"
       get :index, {:full_site => true}
-      controller.view_paths.select{|view|view.to_s=~/#{MobilePath.config.mobile_view_path}/}.should be_present
+      controller.view_paths.select { |view| view.to_s=~/#{MobilePath.config.mobile_view_path}/ }.should_not be_present
       response.location.should be_false
 
       get :index, {:mobile_site => true}
-      controller.view_paths.select{|view|view.to_s=~/#{MobilePath.config.mobile_view_path}/}.should be_present
       response.location.split("http://")[1].split(".")[0].should eq(MobilePath.config.subdomain)
+      response.code.should == "302"
     end
 
     it "should not fail if mobile subdomain is empty" do
@@ -52,7 +52,16 @@ describe ApplicationController do
       request.env["HTTP_USER_AGENT"] = "Mozilla/5.0 (iPhone; U; XXXXX like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/241 Safari/419.3 |"
       get :index
       response.location.should be_nil
-      controller.view_paths.select{|view|view.to_s=~/#{MobilePath.config.mobile_view_path}/}.should be_present
+      controller.view_paths.select { |view| view.to_s=~/#{MobilePath.config.mobile_view_path}/ }.should be_present
+    end
+
+    it "should show mobile version if mobile subdomain is used to request a page" do
+      MobilePath.config.subdomain="m"
+      request.env["HTTP_HOST"]="m.test.com"
+      get :index
+      response.location.should be_nil
+      controller.view_paths.select { |view| view.to_s=~/#{MobilePath.config.mobile_view_path}/ }.should be_present
+      response.code.should == "200"
     end
 
   end

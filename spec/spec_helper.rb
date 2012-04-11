@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
+require 'bundler'
 require 'rspec'
 require 'mobile_path'
 require 'rails/all'
